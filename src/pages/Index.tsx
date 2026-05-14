@@ -403,7 +403,7 @@ const FirstPage: React.FC = () => {
 
         {/* Trusted By Section */}
         <motion.div
-          className="mt-12 sm:mt-16 w-full max-w-6xl mx-auto px-6 sm:px-8 md:px-12"
+          className="mt-12 sm:mt-16 mb-16 sm:mb-24 w-full max-w-6xl mx-auto px-6 sm:px-8 md:px-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.0, duration: 0.6 }}

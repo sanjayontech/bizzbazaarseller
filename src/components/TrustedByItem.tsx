@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 interface TrustedByItemProps {
   id: string;
@@ -13,7 +12,7 @@ interface TrustedByItemProps {
 }
 
 const TrustedByItem: React.FC<TrustedByItemProps> = ({
-  id,
+  id: _id, // required by parent key logic, not used in render
   src,
   alt,
   name,
@@ -23,9 +22,7 @@ const TrustedByItem: React.FC<TrustedByItemProps> = ({
   className = ''
 }) => {
   const isTestimonial = !!(name || title || quote);
-  const isLogo = !isTestimonial;
-  
-  // Create aria-label combining available info
+
   const ariaLabel = [
     name,
     title && `${title}`,
@@ -33,19 +30,18 @@ const TrustedByItem: React.FC<TrustedByItemProps> = ({
   ].filter(Boolean).join(', ');
 
   const content = (
-    <motion.div
+    <div
       className={`
+        trusted-by-card
         relative flex-shrink-0 bg-card border border-border/50 rounded-xl overflow-hidden
-        transition-all duration-200 hover:shadow-md hover:border-border
+        transition-all duration-200 hover:shadow-md hover:border-border hover:-translate-y-0.5 hover:scale-[1.02]
+        active:scale-[0.98]
         ${isTestimonial ? 'w-[240px] sm:w-[280px] p-4' : 'w-20 sm:w-24 h-20 sm:h-24 p-3'}
         ${className}
       `}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      style={{ willChange: 'auto' }}
     >
       {isTestimonial ? (
-        // Testimonial card layout
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             <img
@@ -54,21 +50,16 @@ const TrustedByItem: React.FC<TrustedByItemProps> = ({
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover bg-muted"
               loading="lazy"
               onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
+                (e.target as HTMLImageElement).style.display = 'none';
               }}
             />
           </div>
           <div className="flex-1 min-w-0">
             {name && (
-              <div className="font-semibold text-sm text-foreground truncate">
-                {name}
-              </div>
+              <div className="font-semibold text-sm text-foreground truncate">{name}</div>
             )}
             {title && (
-              <div className="text-xs text-muted-foreground truncate mb-2">
-                {title}
-              </div>
+              <div className="text-xs text-muted-foreground truncate mb-2">{title}</div>
             )}
             {quote && (
               <div className="text-xs text-foreground/80 leading-relaxed line-clamp-2">
@@ -78,7 +69,6 @@ const TrustedByItem: React.FC<TrustedByItemProps> = ({
           </div>
         </div>
       ) : (
-        // Logo card layout
         <div className="w-full h-full flex items-center justify-center">
           <img
             src={src}
@@ -86,20 +76,18 @@ const TrustedByItem: React.FC<TrustedByItemProps> = ({
             className="max-w-full max-h-full object-contain opacity-60 hover:opacity-80 transition-opacity duration-200"
             loading="lazy"
             onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
+              (e.target as HTMLImageElement).style.display = 'none';
             }}
           />
         </div>
       )}
-    </motion.div>
+    </div>
   );
 
   if (href) {
     return (
       <a
         href={href}
-        role="link"
         aria-label={ariaLabel || alt}
         className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-xl"
         target="_blank"

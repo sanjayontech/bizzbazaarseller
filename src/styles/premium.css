@@ -79,6 +79,66 @@
 }
 
 /* ============================================
+   AURORA BLOB ANIMATIONS (CSS-driven, no JS)
+   ============================================ */
+
+@keyframes aurora-blob-1 {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%       { transform: scale(1.1) rotate(5deg); }
+}
+
+@keyframes aurora-blob-2 {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%       { transform: scale(1.15) rotate(-8deg); }
+}
+
+@keyframes aurora-blob-3 {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%       { transform: scale(1.2) translate(30px, -20px); }
+}
+
+/* ============================================
+   MARQUEE (CSS-driven, compositor thread)
+   ============================================ */
+
+@keyframes marquee-ltr {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes marquee-rtl {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+.animate-marquee {
+  animation: marquee-ltr linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-rtl {
+  animation: marquee-rtl linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-paused {
+  animation-play-state: paused !important;
+}
+
+@keyframes ribbon-shine {
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-rtl {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+/* ============================================
    UTILITY CLASSES
    ============================================ */
 
