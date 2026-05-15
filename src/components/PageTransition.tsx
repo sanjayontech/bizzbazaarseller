@@ -24,32 +24,26 @@ const getDirection = (pathname: string): number => {
     return currentIndex >= 0 ? 1 : 1;
 };
 
-// Premium page transition variants
+// Lightweight page transition — opacity + small nudge, no full-screen slide
 const pageVariants = {
     initial: (direction: number) => ({
-        x: direction > 0 ? '100%' : '-100%',
+        x: direction > 0 ? 20 : -20,
         opacity: 0,
-        scale: 0.95,
     }),
     animate: {
         x: 0,
         opacity: 1,
-        scale: 1,
         transition: {
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-            mass: 0.8,
+            duration: 0.18,
+            ease: [0.25, 0.46, 0.45, 0.94],
         }
     },
     exit: (direction: number) => ({
-        x: direction > 0 ? '-30%' : '30%',
+        x: direction > 0 ? -12 : 12,
         opacity: 0,
-        scale: 0.98,
         transition: {
-            type: 'tween',
-            ease: [0.32, 0.72, 0, 1], // Custom easing
-            duration: 0.3,
+            duration: 0.14,
+            ease: 'easeIn',
         }
     }),
 };
