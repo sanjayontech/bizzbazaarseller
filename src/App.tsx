@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import { Language } from "./pages/Language";
-import { StoreName } from "./pages/StoreName";
-import { StoreType } from "./pages/StoreType";
-import { Confirm } from "./pages/Confirm";
-import { Success } from "./pages/Success";
 import StartupLoader from "./components/StartupLoader";
+
+const Index    = lazy(() => import("./pages/Index"));
+const Language = lazy(() => import("./pages/Language").then(m => ({ default: m.Language })));
+const StoreName = lazy(() => import("./pages/StoreName").then(m => ({ default: m.StoreName })));
+const StoreType = lazy(() => import("./pages/StoreType").then(m => ({ default: m.StoreType })));
+const Confirm  = lazy(() => import("./pages/Confirm").then(m => ({ default: m.Confirm })));
+const Success  = lazy(() => import("./pages/Success").then(m => ({ default: m.Success })));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -20,17 +21,18 @@ const AnimatedRoutes = () => {
   const location = useLocation();
   
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/language" element={<Language />} />
-        <Route path="/store-name" element={<StoreName />} />
-        <Route path="/store-type" element={<StoreType />} />
-        <Route path="/confirm" element={<Confirm />} />
-        <Route path="/success" element={<Success />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+    <AnimatePresence mode="sync" initial={false}>
+      <Suspense fallback={null}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Index />} />
+          <Route path="/language" element={<Language />} />
+          <Route path="/store-name" element={<StoreName />} />
+          <Route path="/store-type" element={<StoreType />} />
+          <Route path="/confirm" element={<Confirm />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 };
